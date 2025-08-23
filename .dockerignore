@@ -1,0 +1,51 @@
+# Docker ignore file para API de Logística
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Environments
+.venv/
+venv/
+ENV/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# Documentation and scripts (no necesarios en producción)
+*.md
+scripts/
+test_*.py
+analisis_*.py
+
+# Test files
+tests/
+pytest.ini
+.pytest_cache/
+
+# Development files
+.env.example
+requirements-dev.txt
+
+# Railway no necesita estos archivos
+railway.json
+railway.toml
+
+# Logs y archivos temporales
+*.log
+tmp/
+temp/
