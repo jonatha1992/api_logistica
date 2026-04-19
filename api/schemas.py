@@ -107,3 +107,40 @@ class HealthResponse(BaseModel):
     status: str = Field(..., example="operativo", description="Estado del servicio")
     environment: str = Field(..., example="PRO", description="Entorno actual")
     timestamp: str = Field(..., description="Timestamp de la respuesta")
+
+
+# ===============================================================================
+# MODELOS PARA EL GATEWAY MULTI-TENANT
+# ===============================================================================
+
+class PaymentCreateRequest(BaseModel):
+    amount: float = Field(..., example=1500.00, description="Monto a cobrar")
+    description: str = Field(..., example="Suscripción Mensual Pro", description="Descripción del cobro")
+    customer_email: str = Field(..., example="usuario@ejemplo.com", description="Email del pagador")
+    external_reference: Optional[str] = Field(None, example="PEDIDO-9921", description="Referencia interna del negocio")
+    metadata: Optional[dict] = Field(None, example={"plan": "anual", "user_id": 45})
+    back_url_success: Optional[str] = Field(None, description="URL de redirección en pago exitoso")
+    back_url_failure: Optional[str] = Field(None, description="URL de redirección en pago fallido")
+    back_url_pending: Optional[str] = Field(None, description="URL de redirección en pago pendiente")
+
+
+class PaymentCreateResponse(BaseModel):
+    init_point: str = Field(..., description="URL de la pasarela de pago de Mercado Pago")
+    preference_id: str = Field(..., description="ID de la preferencia creada en MP")
+    external_reference: Optional[str] = Field(None, description="Referencia interna del negocio")
+    status: str = Field(..., example="pending", description="Estado inicial de la transacción")
+
+
+class EmailSendRequest(BaseModel):
+    template_slug: str = Field(..., example="recupero-clave", description="Identificador de la plantilla")
+    to: str = Field(..., example="destinatario@mail.com", description="Dirección de destino")
+    data: Optional[dict] = Field(
+        None,
+        example={"nombre": "Carlos", "link": "https://negocio.com/reset/xyz"},
+        description="Variables para reemplazar en la plantilla ({{ variable }})",
+    )
+
+
+class EmailSendResponse(BaseModel):
+    status: str = Field(..., example="queued", description="Estado del envío (queued / sent / error)")
+    message: str = Field(..., description="Descripción del resultado")

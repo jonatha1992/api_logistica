@@ -1,33 +1,37 @@
 # api_logistica/main.py
 from fastapi import FastAPI, HTTPException, Path
 from fastapi.responses import JSONResponse
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
+from slowapi.util import get_remote_address
 from datetime import datetime
 from typing import List, Optional
 from .schemas import QuoteRequest, CarrierInfo, CarrierListResponse, ConfigInfo, HealthResponse
 from . import client_envia, services, config
+from .database import create_tables
+from .middleware import audit_log_middleware, set_tenant_state_middleware
+from .routers import payments, webhooks, emails
 
 # Configuración mejorada de FastAPI con documentación completa
 app = FastAPI(
-    title="API de Logística - Integración Envia.com",
-    version="1.0.0",
+    title="API de Logística - Gateway Maestro de Servicios",
+    version="2.0.0",
     description="""
-    ## API de Logística para Argentina
-    
-    Esta API permite:
-    
-    * **Cotizar envíos** con múltiples transportistas
-    * **Consultar carriers** disponibles en Argentina
-    * **Obtener información** de configuración
-    
-    ### Carriers Disponibles
-    
-    - **Locales**: OCA, Andreani, Urbano, Rueddo
-    - **Internacionales**: DHL, FedEx
-    - **Postales**: Correo Argentino
-    - **Otros**: DPD
-    
-    ### Entornos
-    
+    ## Gateway Maestro de Servicios Multi-Tenant
+
+    Sistema centralizado de **Pagos, Correos y Logística** para múltiples negocios.
+
+    ### Módulos disponibles
+
+    * **Logística** — Cotizar envíos con OCA, Andreani, DHL, FedEx y más
+    * **Pagos** — Generar links de cobro con Mercado Pago por negocio
+    * **Correos** — Enviar emails con plantillas dinámicas por negocio
+    * **Webhooks** — Recibir notificaciones de MP y reenviarlas al sistema origen
+
+    ### Autenticación (endpoints multi-tenant)
+    Incluir el header: `Authorization: Bearer <API_KEY_DEL_NEGOCIO>`
+
+    ### Entornos Envia.com
     La API soporta entornos de **TEST** y **PRODUCCIÓN**.
     """,
     contact={
@@ -38,6 +42,29 @@ app = FastAPI(
         "name": "MIT",
     },
 )
+
+# ── Rate limiting global ─────────────────────────────────────────────────────
+limiter = Limiter(key_func=get_remote_address)
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
+# ── Middlewares HTTP (ejecutan en orden de definición: primero = más externo) ─
+app.middleware("http")(audit_log_middleware)       # registra en audit_logs después de cada respuesta
+app.middleware("http")(set_tenant_state_middleware)  # resuelve API key → Negocio en request.state
+
+# ── Routers del Gateway multi-tenant ────────────────────────────────────────
+app.include_router(payments.router)
+app.include_router(webhooks.router)
+app.include_router(emails.router)
+
+# ── Startup: crear tablas si no existen ─────────────────────────────────────
+@app.on_event("startup")
+def startup_event():
+    try:
+        create_tables()
+    except Exception:
+        pass  # No bloquea si la DB no está disponible en este entorno
+
 
 # ============================================================================
 # ENDPOINTS PRINCIPALES
