@@ -7,7 +7,13 @@
       "Bash(python:*)",
       "Bash(uvicorn:*)",
       "Bash(curl:*)",
-      "Bash(pytest:*)"
+      "Bash(pytest:*)",
+      "Bash(d:/Repositorio/api_logistica/.venv/Scripts/pip list *)",
+      "Bash(where python *)",
+      "Bash(d:/Repositorio/api_logistica/.venv/Scripts/python.exe -m pip install -r d:/Repositorio/api_logistica/gateway/requirements.txt)",
+      "Bash(d:/Repositorio/api_logistica/.venv/Scripts/python.exe -m ensurepip)",
+      "Bash(d:/Repositorio/api_logistica/.venv/Scripts/python.exe d:/Repositorio/api_logistica/gateway/manage.py check)",
+      "Bash(d:/Repositorio/api_logistica/.venv/Scripts/python.exe -m pip install drf-spectacular==0.27.2 --quiet)"
     ],
     "deny": [],
     "ask": []

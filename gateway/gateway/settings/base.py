@@ -21,6 +21,7 @@ DJANGO_APPS = [
 
 THIRD_PARTY_APPS = [
     'rest_framework',
+    'drf_spectacular',
     'django_celery_results',
     'django_celery_beat',
 ]
@@ -105,9 +106,21 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [],
     'DEFAULT_PERMISSION_CLASSES': [],
     'DEFAULT_RENDERER_CLASSES': ['rest_framework.renderers.JSONRenderer'],
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'DEFAULT_THROTTLE_RATES': {
         'negocio_email': '30/minute',
     },
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'API de Logística - Gateway Maestro de Servicios',
+    'DESCRIPTION': (
+        'Gateway central para cotizaciones de envíos, pagos con MercadoPago, '
+        'webhooks y envío de emails. Multi-tenant con autenticación por API Key.'
+    ),
+    'VERSION': '2.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'CONTACT': {'name': 'Soporte', 'email': 'tecnofusion.it@gmail.com'},
 }
 
 # ── Celery ────────────────────────────────────────────────────────────────────

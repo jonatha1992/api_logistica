@@ -10,3 +10,10 @@ class PaymentCreateSerializer(serializers.Serializer):
     back_url_success = serializers.URLField(required=False, allow_blank=True, default='')
     back_url_failure = serializers.URLField(required=False, allow_blank=True, default='')
     back_url_pending = serializers.URLField(required=False, allow_blank=True, default='')
+
+
+class PaymentCreateResponseSerializer(serializers.Serializer):
+    init_point = serializers.URLField()
+    preference_id = serializers.CharField()
+    external_reference = serializers.CharField()
+    status = serializers.CharField()

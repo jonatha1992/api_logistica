@@ -7,9 +7,13 @@
 # Python cache
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
+.pytest_cache/
 
 # Environment variables
 .env
+.env.*
 
 # Django
 gateway/staticfiles/
@@ -17,3 +21,15 @@ gateway/db.sqlite3
 gateway/__pycache__/
 gateway/**/__pycache__/
 gateway/**/*.pyc
+
+# Build / dist
+dist/
+build/
+*.egg-info/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db

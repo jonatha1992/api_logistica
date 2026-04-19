@@ -3,11 +3,18 @@ import mercadopago
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.conf import settings
+from drf_spectacular.utils import extend_schema
 from .models import Transaccion
-from .serializers import PaymentCreateSerializer
+from .serializers import PaymentCreateSerializer, PaymentCreateResponseSerializer
 
 
 class CreatePaymentView(APIView):
+    @extend_schema(
+        tags=['Pagos'],
+        summary='Crear preferencia de pago en MercadoPago',
+        request=PaymentCreateSerializer,
+        responses={201: PaymentCreateResponseSerializer},
+    )
     def post(self, request):
         negocio = request.negocio
 

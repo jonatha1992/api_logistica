@@ -1,14 +1,21 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from drf_spectacular.utils import extend_schema
 from apps.tenants.throttles import PerNegocioThrottle
 from .models import PlantillaEmail
-from .serializers import EmailSendSerializer
+from .serializers import EmailSendSerializer, EmailSendResponseSerializer
 from .tasks import send_template_email
 
 
 class EmailSendView(APIView):
     throttle_classes = [PerNegocioThrottle]
 
+    @extend_schema(
+        tags=['Emails'],
+        summary='Enviar email usando plantilla Jinja2',
+        request=EmailSendSerializer,
+        responses={200: EmailSendResponseSerializer},
+    )
     def post(self, request):
         negocio = request.negocio
 

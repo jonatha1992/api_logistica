@@ -2,22 +2,28 @@ from datetime import datetime
 from django.conf import settings
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializers import QuoteRequestSerializer
+from drf_spectacular.utils import extend_schema, OpenApiParameter
+from .serializers import (
+    QuoteRequestSerializer, CarrierListResponseSerializer,
+    CarrierInfoSerializer, HealthResponseSerializer, ConfigInfoSerializer,
+)
 from .exceptions import EnviaAPIError
 from . import client_envia, services
 
 
 class WelcomeView(APIView):
+    @extend_schema(tags=['General'], summary='Bienvenida')
     def get(self, request):
         return Response({
             'mensaje': 'Bienvenido al Gateway Maestro de Servicios',
             'version': '2.0.0',
-            'docs': '/admin',
+            'docs': '/docs',
             'environment': settings.ENVIA_ENVIRONMENT,
         })
 
 
 class StatusView(APIView):
+    @extend_schema(tags=['General'], summary='Health check', responses=HealthResponseSerializer)
     def get(self, request):
         return Response({
             'status': 'operativo',
@@ -27,6 +33,11 @@ class StatusView(APIView):
 
 
 class CotizarView(APIView):
+    @extend_schema(
+        tags=['Cotizaciones'],
+        summary='Cotizar envío',
+        request=QuoteRequestSerializer,
+    )
     def post(self, request):
         ser = QuoteRequestSerializer(data=request.data)
         ser.is_valid(raise_exception=True)
@@ -38,6 +49,11 @@ class CotizarView(APIView):
 
 
 class CarriersView(APIView):
+    @extend_schema(
+        tags=['Carriers'],
+        summary='Listar carriers disponibles en Argentina',
+        responses=CarrierListResponseSerializer,
+    )
     def get(self, request):
         try:
             carriers = services.get_carriers_from_envia()
@@ -47,13 +63,18 @@ class CarriersView(APIView):
 
 
 class CarrierDetailView(APIView):
+    @extend_schema(
+        tags=['Carriers'],
+        summary='Detalle de un carrier',
+        responses=CarrierInfoSerializer,
+    )
     def get(self, request, carrier_name):
         try:
             carrier = services.get_carrier_by_name(carrier_name)
             if not carrier:
                 return Response(
                     {'detail': f"Carrier '{carrier_name}' no encontrado"},
-                    status=404
+                    status=404,
                 )
             return Response(carrier)
         except EnviaAPIError as e:
@@ -61,5 +82,10 @@ class CarrierDetailView(APIView):
 
 
 class ConfigView(APIView):
+    @extend_schema(
+        tags=['Configuración'],
+        summary='Configuración actual de la API',
+        responses=ConfigInfoSerializer,
+    )
     def get(self, request):
         return Response(services.get_config_info())
