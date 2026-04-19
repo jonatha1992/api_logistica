@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¡Bienvenido a {{ negocio_nombre }}!</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f4f4f4; }
+        .container { background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        .header { text-align: center; background-color: {{ color_primario }}; color: white; padding: 30px 20px; border-radius: 10px 10px 0 0; margin: -30px -30px 20px -30px; }
+        .header h1 { margin: 10px 0 0 0; font-size: 26px; }
+        .logo { font-size: 48px; margin-bottom: 5px; }
+        .welcome-box { background-color: #f8f9ff; border: 2px solid {{ color_primario }}; border-radius: 8px; padding: 20px; margin: 20px 0; text-align: center; }
+        .welcome-box h2 { color: {{ color_primario }}; margin-top: 0; }
+        .info-section { background-color: #f5f5f5; border-left: 4px solid {{ color_primario }}; padding: 15px 20px; margin: 20px 0; }
+        .btn { display: inline-block; padding: 14px 28px; background-color: {{ color_primario }}; color: white; text-decoration: none; border-radius: 25px; margin: 20px 0; font-weight: bold; font-size: 16px; }
+        .footer { text-align: center; padding: 20px 0; border-top: 1px solid #eee; color: #666; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">{{ negocio_icono }}</div>
+            <h1>¡Bienvenido a {{ negocio_nombre }}!</h1>
+            {% if negocio_slogan %}<p style="margin: 8px 0 0 0; opacity: 0.9;">{{ negocio_slogan }}</p>{% endif %}
+        </div>
+
+        <div style="padding: 20px 0;">
+            <p style="font-size: 18px;">Hola <strong>{{ name }}</strong>,</p>
+
+            <div class="welcome-box">
+                <h2>🎉 ¡Tu cuenta ha sido creada exitosamente!</h2>
+                <p style="margin-bottom: 0;">Gracias por unirte a {{ negocio_nombre }}.</p>
+            </div>
+
+            {% if link %}
+            <div style="text-align: center; margin: 30px 0;">
+                <a href="{{ link }}" class="btn">Activar mi cuenta</a>
+            </div>
+            {% endif %}
+
+            <div class="info-section">
+                <p style="margin: 0;">¿Necesitás ayuda? Nuestro equipo de soporte está disponible para asistirte.
+                {% if negocio_email_soporte %}Contactanos en <a href="mailto:{{ negocio_email_soporte }}">{{ negocio_email_soporte }}</a>.{% endif %}</p>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Este es un mensaje automático de bienvenida, no respondas a este email.</p>
+            <p><strong>{{ negocio_nombre }}</strong>{% if negocio_texto_footer %} — {{ negocio_texto_footer }}{% endif %}</p>
+            <p>© {{ current_year }} {{ negocio_nombre }}. Todos los derechos reservados.</p>
+            {% if negocio_sitio_web and negocio_sitio_web != '#' %}
+            <p><a href="{{ negocio_sitio_web }}" style="color: {{ color_primario }};">{{ negocio_sitio_web }}</a></p>
+            {% endif %}
+            {% if registration_date %}
+            <p style="font-size: 12px; color: #999;">Te registraste el {{ registration_date|date:"d/m/Y" }} a las {{ registration_date|date:"H:i" }}</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

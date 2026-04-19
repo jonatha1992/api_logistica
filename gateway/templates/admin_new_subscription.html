@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nueva Suscripción — {{ negocio_nombre }}</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f4f4f4; }
+        .container { background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        .header { text-align: center; background: linear-gradient(135deg, #00b894 0%, #00cec9 100%); color: white; padding: 25px; border-radius: 10px 10px 0 0; margin: -30px -30px 25px -30px; }
+        .header h1 { margin: 0; font-size: 26px; }
+        .logo { font-size: 30px; font-weight: bold; margin-bottom: 8px; }
+        .success-alert { background: linear-gradient(135deg, #fdcb6e 0%, #f39c12 100%); color: white; padding: 20px; border-radius: 8px; text-align: center; margin: 20px 0; font-weight: bold; font-size: 18px; }
+        .info-box { border-radius: 8px; padding: 25px; margin: 25px 0; }
+        .user-info { background-color: #fff5f5; border: 1px solid #fed7d7; }
+        .subscription-info { background-color: #f8f9ff; border: 1px solid #e0e6ff; }
+        .metrics { display: flex; justify-content: space-around; background-color: #f1f2f6; padding: 20px; border-radius: 8px; margin: 20px 0; }
+        .metric { text-align: center; }
+        .metric-value { font-size: 24px; font-weight: bold; color: {{ color_primario }}; }
+        .metric-label { font-size: 12px; color: #666; text-transform: uppercase; }
+        .amount { font-size: 24px; font-weight: bold; color: #00b894; }
+        .footer { text-align: center; padding: 25px 0; border-top: 1px solid #eee; color: #666; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">💰 {{ negocio_nombre }} Admin</div>
+            <h1>Nueva Suscripción</h1>
+            <p style="margin: 8px 0 0 0; opacity: 0.9;">¡Un nuevo usuario se ha suscrito!</p>
+        </div>
+
+        <div class="success-alert">
+            🎉 ¡NUEVA VENTA! Un cliente ha adquirido el plan {{ plan_name }}
+        </div>
+
+        <div class="info-box user-info">
+            <h3>👤 Información del Cliente</h3>
+            <p><strong>Nombre:</strong> {{ user_name }}</p>
+            <p><strong>Email:</strong> <a href="mailto:{{ user_email }}">{{ user_email }}</a></p>
+        </div>
+
+        <div class="info-box subscription-info">
+            <h3>📋 Detalles de la Suscripción</h3>
+            <p><strong>Plan:</strong> {{ plan_name }}</p>
+            <p><strong>Precio:</strong> <span class="amount">${{ plan_price }}</span></p>
+            <p><strong>Estado:</strong> <span style="color: #00b894; font-weight: bold;">✅ ACTIVA</span></p>
+        </div>
+
+        <div class="metrics">
+            <div class="metric">
+                <div class="metric-value">{{ total_subscriptions }}</div>
+                <div class="metric-label">Suscripciones Totales</div>
+            </div>
+            <div class="metric">
+                <div class="metric-value">${{ monthly_revenue }}</div>
+                <div class="metric-label">Ingresos del Mes</div>
+            </div>
+        </div>
+
+        <div style="background-color: #fff3cd; border: 1px solid #ffeaa7; border-radius: 8px; padding: 20px; margin: 25px 0;">
+            <h4>📝 Acciones Sugeridas:</h4>
+            <ul>
+                <li>✅ Email de bienvenida enviado automáticamente al usuario</li>
+                <li>📊 Monitorear el uso de la suscripción</li>
+                <li>📈 Actualizar métricas de conversión</li>
+            </ul>
+        </div>
+
+        <div class="footer">
+            <p><strong>{{ negocio_nombre }}</strong> — Panel de Administración</p>
+            <p>© {{ current_year }} {{ negocio_nombre }}. Sistema de notificaciones automáticas.</p>
+        </div>
+    </div>
+</body>
+</html>

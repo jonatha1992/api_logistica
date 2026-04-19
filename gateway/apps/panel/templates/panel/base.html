@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Panel de Gestión{% endblock %}</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f0f2f5; color: #1a1a2e; min-height: 100vh; }
+
+    /* Navbar */
+    .navbar { background: #1a1a2e; color: #fff; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 56px; }
+    .navbar-brand { font-weight: 700; font-size: 18px; letter-spacing: -0.3px; }
+    .navbar-brand span { color: #6366f1; }
+    .navbar-user { font-size: 13px; color: #94a3b8; display: flex; align-items: center; gap: 16px; }
+    .navbar-user a { color: #94a3b8; text-decoration: none; }
+    .navbar-user a:hover { color: #fff; }
+
+    /* Layout */
+    .container { max-width: 1200px; margin: 0 auto; padding: 32px 24px; }
+
+    /* Cards */
+    .card { background: #fff; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,.08); padding: 24px; margin-bottom: 24px; }
+    .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+    .card-title { font-size: 17px; font-weight: 600; }
+
+    /* Buttons */
+    .btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; border: none; cursor: pointer; font-size: 14px; font-weight: 500; text-decoration: none; transition: opacity .15s; }
+    .btn:hover { opacity: .85; }
+    .btn-primary { background: #6366f1; color: #fff; }
+    .btn-success { background: #10b981; color: #fff; }
+    .btn-danger  { background: #ef4444; color: #fff; }
+    .btn-outline { background: transparent; border: 1.5px solid #d1d5db; color: #374151; }
+    .btn-sm { padding: 5px 10px; font-size: 12px; }
+
+    /* Alerts */
+    .alert { padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; font-size: 14px; }
+    .alert-success { background: #d1fae5; color: #065f46; }
+    .alert-error   { background: #fee2e2; color: #991b1b; }
+
+    /* Badge */
+    .badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+    .badge-green { background: #d1fae5; color: #065f46; }
+    .badge-red   { background: #fee2e2; color: #991b1b; }
+    .badge-gray  { background: #f3f4f6; color: #6b7280; }
+
+    /* Table */
+    table { width: 100%; border-collapse: collapse; }
+    th { text-align: left; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .5px; color: #6b7280; padding: 0 12px 10px; }
+    td { padding: 14px 12px; border-top: 1px solid #f3f4f6; font-size: 14px; vertical-align: middle; }
+    tr:hover td { background: #fafafa; }
+
+    /* Forms */
+    .form-group { margin-bottom: 20px; }
+    .form-label { display: block; font-size: 13px; font-weight: 500; color: #374151; margin-bottom: 6px; }
+    .form-hint  { font-size: 11px; color: #9ca3af; margin-top: 4px; }
+    .form-input { width: 100%; padding: 9px 12px; border: 1.5px solid #d1d5db; border-radius: 8px; font-size: 14px; color: #1a1a2e; transition: border-color .15s; }
+    .form-input:focus { outline: none; border-color: #6366f1; }
+    .form-row { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+    .form-section { margin-bottom: 32px; }
+    .form-section-title { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: #6b7280; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid #e5e7eb; }
+
+    /* Tabs */
+    .tabs { display: flex; gap: 2px; margin-bottom: 24px; background: #f3f4f6; border-radius: 10px; padding: 4px; }
+    .tab { flex: 1; padding: 8px 12px; border: none; border-radius: 8px; background: transparent; cursor: pointer; font-size: 13px; font-weight: 500; color: #6b7280; transition: all .15s; text-align: center; }
+    .tab.active { background: #fff; color: #1a1a2e; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* Status dots */
+    .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 4px; }
+    .dot-green { background: #10b981; }
+    .dot-red   { background: #ef4444; }
+
+    /* API key display */
+    .api-key-box { font-family: monospace; font-size: 13px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 14px; word-break: break-all; color: #475569; }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-brand">Gateway <span>Maestro</span></div>
+  {% if user.is_authenticated %}
+  <div class="navbar-user">
+    <span>{{ user.username }}</span>
+    <a href="/panel/logout/">Cerrar sesión</a>
+  </div>
+  {% endif %}
+</nav>
+
+<div class="container">
+  {% for msg in messages %}
+    <div class="alert {% if msg.tags == 'error' %}alert-error{% else %}alert-success{% endif %}">{{ msg }}</div>
+  {% endfor %}
+  {% block content %}{% endblock %}
+</div>
+
+</body>
+</html>

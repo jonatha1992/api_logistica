@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¡Bienvenido a {{ negocio_nombre }} Premium!</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f4f4f4; }
+        .container { background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        .header { text-align: center; background-color: {{ color_primario }}; color: white; padding: 30px; border-radius: 10px 10px 0 0; margin: -30px -30px 30px -30px; }
+        .header h1 { margin: 0; font-size: 26px; }
+        .logo { font-size: 32px; font-weight: bold; margin-bottom: 10px; }
+        .success-badge { background-color: #00b894; color: white; padding: 15px; border-radius: 25px; text-align: center; margin: 20px 0; font-weight: bold; font-size: 18px; }
+        .details-box { background-color: #f8f9ff; border: 1px solid #e0e6ff; border-radius: 8px; padding: 25px; margin: 25px 0; }
+        .btn { display: inline-block; padding: 14px 28px; background-color: {{ color_primario }}; color: white; text-decoration: none; border-radius: 25px; margin: 10px; font-weight: bold; font-size: 16px; }
+        .footer { text-align: center; padding: 30px 0; border-top: 1px solid #eee; color: #666; font-size: 14px; }
+        .price { font-size: 24px; font-weight: bold; color: #00b894; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">{{ negocio_icono }} {{ negocio_nombre }}</div>
+            <h1>¡Bienvenido a Premium!</h1>
+            <p style="margin: 8px 0 0 0; opacity: 0.9;">Tu suscripción ha sido activada exitosamente</p>
+        </div>
+
+        <div class="success-badge">
+            ✅ ¡Felicidades, {{ user_name }}! Ya sos parte del plan Premium
+        </div>
+
+        <p>¡Gracias por suscribirte a <strong>{{ negocio_nombre }}</strong>! Tu plan ha sido activado y ya podés disfrutar de todos los beneficios.</p>
+
+        <div class="details-box">
+            <h3>📋 Detalles de tu Suscripción</h3>
+            <p><strong>Plan:</strong> {{ plan_name }}</p>
+            <p><strong>Precio:</strong> <span class="price">${{ plan_price }}</span></p>
+            <p><strong>Fecha de Activación:</strong> {{ activation_date }}</p>
+        </div>
+
+        <div style="text-align: center; margin: 30px 0;">
+            {% if frontend_url %}
+            <a href="{{ frontend_url }}" class="btn">🚀 Empezar Ahora</a>
+            {% endif %}
+        </div>
+
+        <p>Si tenés alguna pregunta, nuestro equipo de soporte está disponible para ayudarte.
+        {% if negocio_email_soporte %}Escribinos a <a href="mailto:{{ negocio_email_soporte }}">{{ negocio_email_soporte }}</a>.{% endif %}</p>
+
+        <div class="footer">
+            <p><strong>{{ negocio_nombre }}</strong>{% if negocio_texto_footer %} — {{ negocio_texto_footer }}{% endif %}</p>
+            <p>© {{ current_year }} {{ negocio_nombre }}. Todos los derechos reservados.</p>
+            {% if negocio_email_soporte %}
+            <p>Soporte: <a href="mailto:{{ negocio_email_soporte }}">{{ negocio_email_soporte }}</a></p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

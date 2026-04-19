@@ -5,6 +5,40 @@ from .models import Negocio
 from .serializers import NegocioCreateSerializer, NegocioResponseSerializer
 
 
+class NegocioMeView(APIView):
+    """Configuración self-service del negocio autenticado."""
+
+    @extend_schema(
+        tags=['Mi Negocio'],
+        summary='Ver mi configuración',
+        description=(
+            'Devuelve la configuración completa del negocio autenticado: '
+            'datos de marca, SMTP, estado de servicios (Resend, MercadoPago). '
+            'Las API keys de proveedores son write-only y no se devuelven.'
+        ),
+        responses=NegocioResponseSerializer,
+    )
+    def get(self, request):
+        return Response(NegocioResponseSerializer(request.negocio).data)
+
+    @extend_schema(
+        tags=['Mi Negocio'],
+        summary='Actualizar mi configuración',
+        description=(
+            'Actualiza la configuración del negocio autenticado. '
+            'Todos los campos son opcionales (PATCH parcial). '
+            'Las API keys (resend_api_key, mp_access_token, smtp_pass) se encriptan automáticamente.'
+        ),
+        request=NegocioCreateSerializer,
+        responses=NegocioResponseSerializer,
+    )
+    def patch(self, request):
+        ser = NegocioCreateSerializer(request.negocio, data=request.data, partial=True)
+        ser.is_valid(raise_exception=True)
+        negocio = ser.save()
+        return Response(NegocioResponseSerializer(negocio).data)
+
+
 class NegocioListCreateView(APIView):
     @extend_schema(
         tags=['Tenants'],

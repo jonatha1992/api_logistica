@@ -44,9 +44,9 @@ class EmailSendView(APIView):
     def post(self, request):
         negocio = request.negocio
 
-        if not negocio.smtp_host:
+        if not (negocio.smtp_host or negocio.resend_api_key):
             return Response(
-                {'detail': 'Negocio sin configuración SMTP. Configurarlo en /admin.'},
+                {'detail': 'Negocio sin proveedor de email configurado. Agregá Resend API Key o SMTP en /admin.'},
                 status=422
             )
 

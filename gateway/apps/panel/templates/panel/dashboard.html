@@ -1,0 +1,90 @@
+{% extends "panel/base.html" %}
+{% block title %}Dashboard — Gateway Maestro{% endblock %}
+
+{% block content %}
+<div class="card">
+  <div class="card-header">
+    <h2 class="card-title">Negocios registrados</h2>
+    <a href="/panel/negocios/nuevo/" class="btn btn-primary">+ Nuevo negocio</a>
+  </div>
+
+  {% if negocios %}
+  <table>
+    <thead>
+      <tr>
+        <th>Negocio</th>
+        <th>API Key</th>
+        <th>Email</th>
+        <th>Pagos</th>
+        <th>Logística</th>
+        <th>WhatsApp</th>
+        <th>Estado</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for n in negocios %}
+      <tr>
+        <td>
+          <div style="font-weight:600;">{{ n.nombre_comercial|default:n.nombre }}</div>
+          {% if n.nombre_comercial %}<div style="font-size:12px;color:#9ca3af;">{{ n.nombre }}</div>{% endif %}
+        </td>
+        <td>
+          <code style="font-size:11px;color:#6b7280;background:#f8fafc;padding:2px 6px;border-radius:4px;">{{ n.api_key|slice:":16" }}…</code>
+        </td>
+        <td>
+          {% if n.resend_api_key or n.smtp_host %}
+            <span class="badge badge-green">✓ Configurado</span>
+          {% else %}
+            <span class="badge badge-gray">— Sin config</span>
+          {% endif %}
+        </td>
+        <td>
+          {% if n.mp_access_token %}
+            <span class="badge badge-green">✓ MercadoPago</span>
+          {% else %}
+            <span class="badge badge-gray">—</span>
+          {% endif %}
+        </td>
+        <td>
+          {% if n.envia_token %}
+            <span class="badge badge-green">✓ Envia.com</span>
+          {% else %}
+            <span class="badge badge-gray">—</span>
+          {% endif %}
+        </td>
+        <td>
+          {% if n.whatsapp_api_key %}
+            <span class="badge badge-green">✓ {{ n.whatsapp_provider|default:"Config." }}</span>
+          {% else %}
+            <span class="badge badge-gray">—</span>
+          {% endif %}
+        </td>
+        <td>
+          {% if n.activo %}
+            <span class="badge badge-green"><span class="dot dot-green"></span>Activo</span>
+          {% else %}
+            <span class="badge badge-red"><span class="dot dot-red"></span>Inactivo</span>
+          {% endif %}
+        </td>
+        <td style="text-align:right;">
+          <a href="/panel/negocios/{{ n.pk }}/" class="btn btn-outline btn-sm">Editar</a>
+          <a href="/panel/negocios/{{ n.pk }}/toggle/" class="btn btn-sm {% if n.activo %}btn-danger{% else %}btn-success{% endif %}"
+             onclick="return confirm('¿Confirmar cambio de estado?')">
+            {% if n.activo %}Desactivar{% else %}Activar{% endif %}
+          </a>
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div style="text-align:center;padding:48px;color:#9ca3af;">
+    <div style="font-size:48px;margin-bottom:12px;">🏢</div>
+    <p style="font-size:16px;font-weight:500;color:#6b7280;margin-bottom:8px;">No hay negocios registrados</p>
+    <p style="font-size:13px;">Creá el primero para empezar a configurar servicios.</p>
+    <a href="/panel/negocios/nuevo/" class="btn btn-primary" style="margin-top:16px;">+ Nuevo negocio</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

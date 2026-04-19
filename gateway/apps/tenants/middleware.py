@@ -14,6 +14,10 @@ class TenantMiddleware:
     }
     PREFIJOS_PUBLICOS = (
         '/admin/',
+        '/panel/',
+        '/docs',
+        '/redoc',
+        '/api/schema/',
         '/api/v1/webhooks/mercadopago/',
         '/api/v1/carriers',
         '/api/v1/cotizar',

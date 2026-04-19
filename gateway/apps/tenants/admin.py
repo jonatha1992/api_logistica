@@ -22,10 +22,21 @@ class NegocioAdmin(admin.ModelAdmin):
             'fields': ('telefono', 'direccion', 'sitio_web'),
             'classes': ('collapse',),
         }),
-        ('Branding', {
+        ('Identidad de Marca', {
+            'fields': ('nombre_comercial', 'slogan', 'icono_emoji', 'email_soporte', 'texto_footer'),
+            'classes': ('collapse',),
+            'description': (
+                'Estos campos se inyectan automáticamente en todos los templates de email como variables Jinja2. '
+                'Variables disponibles: <code>{{ negocio_nombre }}</code>, <code>{{ negocio_slogan }}</code>, '
+                '<code>{{ negocio_icono }}</code>, <code>{{ negocio_color_primario }}</code>, '
+                '<code>{{ negocio_logo_url }}</code>, <code>{{ negocio_sitio_web }}</code>, '
+                '<code>{{ negocio_email_soporte }}</code>, <code>{{ negocio_texto_footer }}</code>'
+            ),
+        }),
+        ('Branding Visual', {
             'fields': ('logo_url', 'color_primario', 'color_secundario'),
             'classes': ('collapse',),
-            'description': 'URL pública del logo (HTTPS). Colores en formato hexadecimal, ej: #FF5733',
+            'description': 'URL pública del logo (HTTPS). Colores en formato hexadecimal, ej: #4f46e5',
         }),
         ('🏦 Mercado Pago', {
             'fields': ('mp_access_token', 'webhook_notificacion'),
@@ -35,10 +46,15 @@ class NegocioAdmin(admin.ModelAdmin):
                 'Nunca se almacena en texto plano en la base de datos.'
             ),
         }),
-        ('📧 Configuración SMTP', {
-            'fields': ('smtp_host', 'smtp_port', 'smtp_user', 'smtp_pass', 'smtp_from'),
+        ('📨 Proveedores de Email', {
+            'fields': ('resend_api_key', 'smtp_host', 'smtp_port', 'smtp_user', 'smtp_pass', 'smtp_from'),
             'classes': ('collapse',),
-            'description': 'La contraseña SMTP se encripta automáticamente al guardar.',
+            'description': (
+                '<strong>Resend (recomendado):</strong> Agregá el API Key de resend.com — se encripta automáticamente. '
+                'Si está configurado, se usa Resend para enviar emails (ignorando SMTP).<br>'
+                '<strong>SMTP (fallback):</strong> Se usa si no hay API Key de Resend configurado. '
+                'La contraseña SMTP también se encripta automáticamente.'
+            ),
         }),
     )
 

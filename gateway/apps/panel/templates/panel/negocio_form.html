@@ -1,0 +1,266 @@
+{% extends "panel/base.html" %}
+{% block title %}{% if negocio %}Editar {{ negocio.nombre }}{% else %}Nuevo negocio{% endif %} — Gateway Maestro{% endblock %}
+
+{% block content %}
+<div style="margin-bottom:20px;display:flex;align-items:center;gap:12px;">
+  <a href="/panel/" class="btn btn-outline btn-sm">← Volver</a>
+  <h1 style="font-size:20px;font-weight:700;">
+    {% if negocio %}Editar: {{ negocio.nombre_comercial|default:negocio.nombre }}{% else %}Nuevo negocio{% endif %}
+  </h1>
+</div>
+
+{% if negocio %}
+<div class="card" style="padding:16px 24px;margin-bottom:20px;">
+  <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+    <div>
+      <span style="font-size:12px;color:#6b7280;font-weight:600;text-transform:uppercase;letter-spacing:.4px;">API Key del negocio</span>
+      <div class="api-key-box" style="margin-top:4px;">{{ negocio.api_key }}</div>
+    </div>
+    <div style="margin-left:auto;font-size:13px;color:#6b7280;">
+      Estado:
+      {% if negocio.activo %}<span class="badge badge-green">Activo</span>{% else %}<span class="badge badge-red">Inactivo</span>{% endif %}
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<div class="card">
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab(event,'tab-info')">🏢 Datos generales</button>
+    <button class="tab" onclick="switchTab(event,'tab-brand')">🎨 Marca</button>
+    <button class="tab" onclick="switchTab(event,'tab-email')">✉️ Email</button>
+    <button class="tab" onclick="switchTab(event,'tab-pagos')">💳 Pagos</button>
+    <button class="tab" onclick="switchTab(event,'tab-logistica')">📦 Logística</button>
+    <button class="tab" onclick="switchTab(event,'tab-whatsapp')">💬 WhatsApp</button>
+  </div>
+
+  <form method="post">
+    {% csrf_token %}
+
+    <!-- TAB: Datos generales -->
+    <div id="tab-info" class="tab-panel active">
+      <div class="form-section">
+        <div class="form-section-title">Identificación</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Nombre interno *</label>
+            <input class="form-input" type="text" name="nombre" value="{{ negocio.nombre|default:'' }}" required placeholder="Ej: cliente-ecommerce-sa">
+            <p class="form-hint">Nombre técnico interno, no se muestra al público.</p>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Razón social</label>
+            <input class="form-input" type="text" name="razon_social" value="{{ negocio.razon_social|default:'' }}" placeholder="Ej: Mi Empresa S.A.">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">CUIT</label>
+            <input class="form-input" type="text" name="cuit" value="{{ negocio.cuit|default:'' }}" placeholder="20-12345678-9">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Teléfono</label>
+            <input class="form-input" type="text" name="telefono" value="{{ negocio.telefono|default:'' }}" placeholder="+54 11 1234-5678">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Dirección</label>
+            <input class="form-input" type="text" name="direccion" value="{{ negocio.direccion|default:'' }}" placeholder="Av. Corrientes 1234, CABA">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Sitio web</label>
+            <input class="form-input" type="url" name="sitio_web" value="{{ negocio.sitio_web|default:'' }}" placeholder="https://mitienda.com">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: Marca -->
+    <div id="tab-brand" class="tab-panel">
+      <div class="form-section">
+        <div class="form-section-title">Identidad visual</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Nombre comercial</label>
+            <input class="form-input" type="text" name="nombre_comercial" value="{{ negocio.nombre_comercial|default:'' }}" placeholder="Mi Tienda Online">
+            <p class="form-hint">Nombre que aparece en emails y comunicaciones al cliente.</p>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Ícono / Emoji</label>
+            <input class="form-input" type="text" name="icono_emoji" value="{{ negocio.icono_emoji|default:'📦' }}" placeholder="📦" maxlength="10">
+            <p class="form-hint">Emoji que aparece en el encabezado de emails.</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Slogan</label>
+          <input class="form-input" type="text" name="slogan" value="{{ negocio.slogan|default:'' }}" placeholder="La descripción corta de tu negocio">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Color primario</label>
+            <div style="display:flex;gap:8px;align-items:center;">
+              <input type="color" name="color_primario" value="{{ negocio.color_primario|default:'#4f46e5' }}" style="width:44px;height:38px;padding:2px;border:1.5px solid #d1d5db;border-radius:8px;cursor:pointer;">
+              <input class="form-input" type="text" id="color_primario_text" value="{{ negocio.color_primario|default:'#4f46e5' }}" placeholder="#4f46e5" style="font-family:monospace;" oninput="syncColor(this,'color_primario')" readonly>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Color secundario</label>
+            <div style="display:flex;gap:8px;align-items:center;">
+              <input type="color" name="color_secundario" value="{{ negocio.color_secundario|default:'#7c3aed' }}" style="width:44px;height:38px;padding:2px;border:1.5px solid #d1d5db;border-radius:8px;cursor:pointer;">
+              <input class="form-input" type="text" id="color_secundario_text" value="{{ negocio.color_secundario|default:'#7c3aed' }}" placeholder="#7c3aed" style="font-family:monospace;" oninput="syncColor(this,'color_secundario')" readonly>
+            </div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">URL del logo</label>
+            <input class="form-input" type="url" name="logo_url" value="{{ negocio.logo_url|default:'' }}" placeholder="https://mitienda.com/logo.png">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email de soporte</label>
+            <input class="form-input" type="email" name="email_soporte" value="{{ negocio.email_soporte|default:'' }}" placeholder="soporte@mitienda.com">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Texto del footer de emails</label>
+          <input class="form-input" type="text" name="texto_footer" value="{{ negocio.texto_footer|default:'' }}" placeholder="Ej: Líder en logística del norte">
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: Email -->
+    <div id="tab-email" class="tab-panel">
+      <div class="form-section">
+        <div class="form-section-title">Resend (recomendado)</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">API Key de Resend</label>
+            <input class="form-input" type="password" name="resend_api_key" placeholder="{% if negocio.resend_api_key %}••••••••• (guardada){% else %}re_xxxxxxxxxxxx{% endif %}">
+            <p class="form-hint">Dejá vacío para conservar la clave guardada.</p>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email remitente *</label>
+            <input class="form-input" type="email" name="smtp_from" value="{{ negocio.smtp_from|default:'' }}" placeholder="noreply@mitienda.com">
+            <p class="form-hint">Requerido tanto para Resend como para SMTP.</p>
+          </div>
+        </div>
+      </div>
+      <div class="form-section">
+        <div class="form-section-title">SMTP (alternativo)</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Servidor SMTP</label>
+            <input class="form-input" type="text" name="smtp_host" value="{{ negocio.smtp_host|default:'' }}" placeholder="smtp.gmail.com">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Puerto</label>
+            <input class="form-input" type="number" name="smtp_port" value="{{ negocio.smtp_port|default:587 }}" placeholder="587">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Usuario SMTP</label>
+            <input class="form-input" type="text" name="smtp_user" value="{{ negocio.smtp_user|default:'' }}" placeholder="user@gmail.com">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Contraseña SMTP</label>
+            <input class="form-input" type="password" name="smtp_pass" placeholder="{% if negocio.smtp_pass %}••••••••• (guardada){% else %}Contraseña{% endif %}">
+            <p class="form-hint">Dejá vacío para conservar la guardada.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: Pagos -->
+    <div id="tab-pagos" class="tab-panel">
+      <div class="form-section">
+        <div class="form-section-title">MercadoPago</div>
+        <div class="form-group">
+          <label class="form-label">Access Token</label>
+          <input class="form-input" type="password" name="mp_access_token" placeholder="{% if negocio.mp_access_token %}••••••••• (guardado){% else %}APP_USR-xxxxx{% endif %}">
+          <p class="form-hint">Token de producción de MercadoPago. Dejá vacío para conservar el guardado.</p>
+        </div>
+        <div class="form-group">
+          <label class="form-label">URL Webhook de notificación</label>
+          <input class="form-input" type="url" name="webhook_notificacion" value="{{ negocio.webhook_notificacion|default:'' }}" placeholder="https://miapp.com/api/pagos/notificacion">
+          <p class="form-hint">URL de tu app que recibe notificaciones de pago de MercadoPago.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: Logística -->
+    <div id="tab-logistica" class="tab-panel">
+      <div class="form-section">
+        <div class="form-section-title">Envia.com</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Token de API</label>
+            <input class="form-input" type="password" name="envia_token" placeholder="{% if negocio.envia_token %}••••••••• (guardado){% else %}Token de Envia.com{% endif %}">
+            <p class="form-hint">Dejá vacío para conservar el guardado.</p>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Ambiente</label>
+            <select class="form-input" name="envia_ambiente">
+              <option value="TEST" {% if not negocio or negocio.envia_ambiente == 'TEST' %}selected{% endif %}>Testing (ship-test.envia.com)</option>
+              <option value="PRO" {% if negocio and negocio.envia_ambiente == 'PRO' %}selected{% endif %}>Producción (api.envia.com)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: WhatsApp -->
+    <div id="tab-whatsapp" class="tab-panel">
+      <div class="form-section">
+        <div class="form-section-title">Configuración WhatsApp</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Proveedor</label>
+            <select class="form-input" name="whatsapp_provider">
+              <option value="">— Sin proveedor —</option>
+              {% with provider=negocio.whatsapp_provider|default:"" %}
+              <option value="twilio"    {% if provider == "twilio"    %}selected{% endif %}>Twilio</option>
+              <option value="wati"      {% if provider == "wati"      %}selected{% endif %}>Wati</option>
+              <option value="360dialog" {% if provider == "360dialog" %}selected{% endif %}>360dialog</option>
+              <option value="meta"      {% if provider == "meta"      %}selected{% endif %}>Meta (Cloud API)</option>
+              <option value="infobip"   {% if provider == "infobip"   %}selected{% endif %}>Infobip</option>
+              {% endwith %}
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Número WhatsApp</label>
+            <input class="form-input" type="text" name="whatsapp_number" value="{{ negocio.whatsapp_number|default:'' }}" placeholder="+5491122334455">
+            <p class="form-hint">Número en formato internacional.</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">API Key / Token del proveedor</label>
+          <input class="form-input" type="password" name="whatsapp_api_key" placeholder="{% if negocio.whatsapp_api_key %}••••••••• (guardada){% else %}Token del proveedor{% endif %}">
+          <p class="form-hint">Dejá vacío para conservar la guardada.</p>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;justify-content:flex-end;gap:12px;padding-top:8px;border-top:1px solid #f3f4f6;margin-top:8px;">
+      <a href="/panel/" class="btn btn-outline">Cancelar</a>
+      <button type="submit" class="btn btn-primary">💾 Guardar cambios</button>
+    </div>
+  </form>
+</div>
+
+<script>
+function switchTab(e, id) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  e.target.classList.add('active');
+  document.getElementById(id).classList.add('active');
+}
+
+// Sync color picker <-> text input
+document.querySelectorAll('input[type=color]').forEach(picker => {
+  const name = picker.name;
+  const text = document.getElementById(name + '_text');
+  picker.addEventListener('input', () => { if(text) text.value = picker.value; });
+});
+</script>
+{% endblock %}
