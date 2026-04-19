@@ -17,7 +17,9 @@ class TenantAuthTest(TestCase):
     def test_missing_auth_header(self):
         r = self.client.post('/api/v1/payments/create', {}, format='json')
         self.assertEqual(r.status_code, 401)
-        self.assertIn('detail', r.data)
+        import json
+        body = json.loads(r.content)
+        self.assertIn('detail', body)
 
     def test_invalid_api_key(self):
         self.client.credentials(HTTP_AUTHORIZATION='Bearer key-invalida-xyz')

@@ -45,7 +45,12 @@ class CotizarEndpointTest(TestCase):
         self.client = APIClient()
 
     @patch('apps.logistics.client_envia.requests.post')
-    def test_cotizar_success(self, mock_post):
+    @patch('apps.logistics.client_envia.settings')
+    def test_cotizar_success(self, mock_settings, mock_post):
+        mock_settings.ENVIA_TOKEN = 'fake-test-token'
+        mock_settings.ENVIA_API_URL = 'https://ship-test.envia.com'
+        mock_settings.ENVIA_API_HEADERS = {'Authorization': 'Bearer fake-test-token', 'Content-Type': 'application/json'}
+
         mock_resp = MagicMock()
         mock_resp.status_code = 200
         mock_resp.json.return_value = {'data': [{'carrier': 'oca', 'price': 500}]}
@@ -79,7 +84,13 @@ class CarriersEndpointTest(TestCase):
         self.client = APIClient()
 
     @patch('apps.logistics.services.requests.get')
-    def test_carriers_success(self, mock_get):
+    @patch('apps.logistics.services.settings')
+    def test_carriers_success(self, mock_settings, mock_get):
+        mock_settings.ENVIA_TOKEN = 'fake-test-token'
+        mock_settings.ENVIA_ENVIRONMENT = 'TEST'
+        mock_settings.ENVIA_API_URL = 'https://ship-test.envia.com'
+        mock_settings.ENVIA_API_HEADERS = {'Authorization': 'Bearer fake-test-token', 'Content-Type': 'application/json'}
+
         mock_resp = MagicMock()
         mock_resp.status_code = 200
         mock_resp.json.return_value = {'data': [
@@ -95,7 +106,13 @@ class CarriersEndpointTest(TestCase):
         self.assertIn('data', r.data)
 
     @patch('apps.logistics.services.requests.get')
-    def test_carrier_detail_found(self, mock_get):
+    @patch('apps.logistics.services.settings')
+    def test_carrier_detail_found(self, mock_settings, mock_get):
+        mock_settings.ENVIA_TOKEN = 'fake-test-token'
+        mock_settings.ENVIA_ENVIRONMENT = 'TEST'
+        mock_settings.ENVIA_API_URL = 'https://ship-test.envia.com'
+        mock_settings.ENVIA_API_HEADERS = {'Authorization': 'Bearer fake-test-token', 'Content-Type': 'application/json'}
+
         mock_resp = MagicMock()
         mock_resp.status_code = 200
         mock_resp.json.return_value = {'data': [
@@ -108,7 +125,13 @@ class CarriersEndpointTest(TestCase):
         self.assertEqual(r.status_code, 200)
 
     @patch('apps.logistics.services.requests.get')
-    def test_carrier_detail_not_found(self, mock_get):
+    @patch('apps.logistics.services.settings')
+    def test_carrier_detail_not_found(self, mock_settings, mock_get):
+        mock_settings.ENVIA_TOKEN = 'fake-test-token'
+        mock_settings.ENVIA_ENVIRONMENT = 'TEST'
+        mock_settings.ENVIA_API_URL = 'https://ship-test.envia.com'
+        mock_settings.ENVIA_API_HEADERS = {'Authorization': 'Bearer fake-test-token', 'Content-Type': 'application/json'}
+
         mock_resp = MagicMock()
         mock_resp.status_code = 200
         mock_resp.json.return_value = {'data': []}
