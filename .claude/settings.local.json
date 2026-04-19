@@ -13,7 +13,13 @@
       "Bash(d:/Repositorio/api_logistica/.venv/Scripts/python.exe -m pip install -r d:/Repositorio/api_logistica/gateway/requirements.txt)",
       "Bash(d:/Repositorio/api_logistica/.venv/Scripts/python.exe -m ensurepip)",
       "Bash(d:/Repositorio/api_logistica/.venv/Scripts/python.exe d:/Repositorio/api_logistica/gateway/manage.py check)",
-      "Bash(d:/Repositorio/api_logistica/.venv/Scripts/python.exe -m pip install drf-spectacular==0.27.2 --quiet)"
+      "Bash(d:/Repositorio/api_logistica/.venv/Scripts/python.exe -m pip install drf-spectacular==0.27.2 --quiet)",
+      "Bash(xargs ls *)",
+      "Bash(xargs grep *)",
+      "Bash(xargs wc *)",
+      "Bash(xargs cat *)",
+      "Bash(pip install *)",
+      "Bash(DJANGO_SUPERUSER_EMAIL=admin@test.com DJANGO_SUPERUSER_PASSWORD=admin123 python manage.py crear_superusuario --settings=gateway.settings.development)"
     ],
     "deny": [],
     "ask": []

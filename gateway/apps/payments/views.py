@@ -3,7 +3,7 @@ import mercadopago
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.conf import settings
-from drf_spectacular.utils import extend_schema
+from drf_spectacular.utils import extend_schema, OpenApiExample
 from .models import Transaccion
 from .serializers import PaymentCreateSerializer, PaymentCreateResponseSerializer
 
@@ -12,8 +12,28 @@ class CreatePaymentView(APIView):
     @extend_schema(
         tags=['Pagos'],
         summary='Crear preferencia de pago en MercadoPago',
+        description=(
+            'Crea una preferencia de pago en MercadoPago y devuelve la URL de pago (`init_point`). '
+            'Requiere que el negocio tenga `mp_access_token` configurado en /admin. '
+            'El webhook de confirmación llega automáticamente a `/api/v1/webhooks/mercadopago/`.'
+        ),
         request=PaymentCreateSerializer,
         responses={201: PaymentCreateResponseSerializer},
+        examples=[
+            OpenApiExample(
+                'Pago básico',
+                value={
+                    'amount': 1500.00,
+                    'description': 'Suscripción mensual',
+                    'customer_email': 'cliente@ejemplo.com',
+                    'external_reference': 'orden-001',
+                    'back_url_success': 'https://miweb.com/pago-exitoso',
+                    'back_url_failure': 'https://miweb.com/pago-fallido',
+                    'back_url_pending': 'https://miweb.com/pago-pendiente',
+                },
+                request_only=True,
+            ),
+        ],
     )
     def post(self, request):
         negocio = request.negocio

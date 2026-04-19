@@ -12,3 +12,7 @@ if not os.environ.get('DATABASE_URL'):
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
+
+# Celery corre síncronamente en desarrollo (no requiere Redis ni worker)
+CELERY_TASK_ALWAYS_EAGER = True
+CELERY_TASK_EAGER_PROPAGATES = True

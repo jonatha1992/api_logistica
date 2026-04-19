@@ -1,6 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from drf_spectacular.utils import extend_schema
+from drf_spectacular.utils import extend_schema, OpenApiExample
 from apps.tenants.throttles import PerNegocioThrottle
 from .models import PlantillaEmail
 from .serializers import EmailSendSerializer, EmailSendResponseSerializer
@@ -13,8 +13,33 @@ class EmailSendView(APIView):
     @extend_schema(
         tags=['Emails'],
         summary='Enviar email usando plantilla Jinja2',
+        description=(
+            'Envía un email al destinatario usando una plantilla Jinja2 del negocio. '
+            'Requiere que el negocio tenga SMTP configurado en /admin y que la plantilla exista. '
+            'Las variables en `data` se inyectan en el asunto y cuerpo HTML de la plantilla.'
+        ),
         request=EmailSendSerializer,
         responses={200: EmailSendResponseSerializer},
+        examples=[
+            OpenApiExample(
+                'Email de bienvenida',
+                value={
+                    'template_slug': 'bienvenida',
+                    'to': 'cliente@ejemplo.com',
+                    'data': {'nombre': 'Juan García', 'link': 'https://miweb.com/activar/abc123'},
+                },
+                request_only=True,
+            ),
+            OpenApiExample(
+                'Email de pago confirmado',
+                value={
+                    'template_slug': 'pago-confirmado',
+                    'to': 'cliente@ejemplo.com',
+                    'data': {'amount': 1500, 'description': 'Suscripción', 'external_reference': 'orden-001'},
+                },
+                request_only=True,
+            ),
+        ],
     )
     def post(self, request):
         negocio = request.negocio

@@ -29,4 +29,5 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
 
 CMD python manage.py migrate --noinput && \
     python manage.py collectstatic --noinput 2>/dev/null; \
+    python manage.py crear_superusuario; \
     gunicorn gateway.wsgi:application --bind 0.0.0.0:${PORT:-8000} --workers 2 --timeout 120

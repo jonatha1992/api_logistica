@@ -12,6 +12,18 @@ class Negocio(models.Model):
     webhook_notificacion = models.URLField(max_length=500, blank=True, null=True,
                                            verbose_name='URL Webhook de notificación')
 
+    # Datos de empresa
+    razon_social = models.CharField(max_length=300, blank=True, null=True, verbose_name='Razón social')
+    cuit = models.CharField(max_length=20, blank=True, null=True, verbose_name='CUIT')
+    telefono = models.CharField(max_length=50, blank=True, null=True, verbose_name='Teléfono')
+    direccion = models.CharField(max_length=500, blank=True, null=True, verbose_name='Dirección')
+    sitio_web = models.URLField(max_length=300, blank=True, null=True, verbose_name='Sitio web')
+
+    # Branding
+    logo_url = models.URLField(max_length=500, blank=True, null=True, verbose_name='URL del logo')
+    color_primario = models.CharField(max_length=7, default='#000000', verbose_name='Color primario (hex)')
+    color_secundario = models.CharField(max_length=7, default='#FFFFFF', verbose_name='Color secundario (hex)')
+
     # SMTP (contraseña encriptada)
     smtp_host = models.CharField(max_length=200, blank=True, null=True, verbose_name='Servidor SMTP')
     smtp_port = models.IntegerField(default=587, verbose_name='Puerto SMTP')

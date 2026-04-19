@@ -6,17 +6,26 @@ from .models import Negocio
 @admin.register(Negocio)
 class NegocioAdmin(admin.ModelAdmin):
     list_display = [
-        'nombre', 'api_key_preview', 'mp_configurado',
+        'nombre', 'razon_social', 'api_key_preview', 'mp_configurado',
         'smtp_configurado', 'activo', 'created_at'
     ]
     list_filter = ['activo', 'created_at']
-    search_fields = ['nombre']
+    search_fields = ['nombre', 'razon_social', 'cuit']
     readonly_fields = ['api_key', 'created_at']
     actions = ['activar_negocios', 'desactivar_negocios']
 
     fieldsets = (
         ('Información General', {
-            'fields': ('nombre', 'activo', 'api_key')
+            'fields': ('nombre', 'razon_social', 'cuit', 'activo', 'api_key', 'created_at')
+        }),
+        ('Contacto y Datos', {
+            'fields': ('telefono', 'direccion', 'sitio_web'),
+            'classes': ('collapse',),
+        }),
+        ('Branding', {
+            'fields': ('logo_url', 'color_primario', 'color_secundario'),
+            'classes': ('collapse',),
+            'description': 'URL pública del logo (HTTPS). Colores en formato hexadecimal, ej: #FF5733',
         }),
         ('🏦 Mercado Pago', {
             'fields': ('mp_access_token', 'webhook_notificacion'),
