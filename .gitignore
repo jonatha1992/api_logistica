@@ -35,3 +35,5 @@ build/
 Thumbs.db
 # Agent tooling local state
 .claude/settings.local.json
+# MCP local config (contains DB credentials - never commit)
+.mcp.json
