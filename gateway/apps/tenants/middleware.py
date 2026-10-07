@@ -32,6 +32,17 @@ class TenantMiddleware:
         if self._es_publica(request.path):
             return self.get_response(request)
 
+        # Si el usuario ya está autenticado como superuser o staff (p. ej. sesión de panel/admin)
+        if getattr(request, 'user', None) and request.user.is_authenticated and (request.user.is_superuser or request.user.is_staff):
+            return self.get_response(request)
+
+        # Rutas de administración de negocios nunca deben ser accesibles con API keys de tenants
+        if request.path.startswith('/api/v1/negocios'):
+            return JsonResponse(
+                {'detail': 'Acceso denegado: se requieren credenciales de operador o superusuario.'},
+                status=403
+            )
+
         auth = request.headers.get('Authorization', '')
         if not auth.startswith('Bearer '):
             return JsonResponse(

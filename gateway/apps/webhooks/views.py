@@ -1,3 +1,4 @@
+import logging
 import mercadopago
 import httpx
 from rest_framework.views import APIView
@@ -5,6 +6,8 @@ from rest_framework.response import Response
 from apps.tenants.models import Negocio
 from apps.payments.models import Transaccion
 from apps.emails.tasks import send_payment_confirmation_email
+
+logger = logging.getLogger(__name__)
 
 
 class MercadoPagoWebhookView(APIView):
@@ -45,11 +48,13 @@ class MercadoPagoWebhookView(APIView):
         except Transaccion.DoesNotExist:
             return Response({'status': 'transaction_not_found', 'preference_id': preference_id})
 
+        previous_status = t.status
         t.status = mp_status
         t.payment_id = str(payment_id)
         t.save()
 
-        if mp_status == 'approved':
+        # Idempotencia: disparar confirmación y webhook saliente solo ante la primera transición a 'approved'
+        if mp_status == 'approved' and previous_status != 'approved':
             # Email de confirmación asíncrono
             send_payment_confirmation_email.delay(t.id, negocio.id)
 
@@ -68,8 +73,8 @@ class MercadoPagoWebhookView(APIView):
                         },
                         timeout=5.0
                     )
-                except Exception:
-                    pass
+                except Exception as e:
+                    logger.exception("Error al enviar webhook saliente para pago %s: %s", payment_id, e)
 
         return Response({
             'status': 'processed',

@@ -1,8 +1,13 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.permissions import IsAdminUser
 from drf_spectacular.utils import extend_schema
 from .models import Negocio
-from .serializers import NegocioCreateSerializer, NegocioResponseSerializer
+from .serializers import (
+    NegocioCreateSerializer,
+    NegocioResponseSerializer,
+    NegocioCreateResponseSerializer,
+)
 
 
 class NegocioMeView(APIView):
@@ -40,6 +45,8 @@ class NegocioMeView(APIView):
 
 
 class NegocioListCreateView(APIView):
+    permission_classes = [IsAdminUser]
+
     @extend_schema(
         tags=['Tenants'],
         summary='Listar negocios',
@@ -53,16 +60,17 @@ class NegocioListCreateView(APIView):
         tags=['Tenants'],
         summary='Crear negocio (genera api_key automáticamente)',
         request=NegocioCreateSerializer,
-        responses={201: NegocioResponseSerializer},
+        responses={201: NegocioCreateResponseSerializer},
     )
     def post(self, request):
         ser = NegocioCreateSerializer(data=request.data)
         ser.is_valid(raise_exception=True)
         negocio = ser.save()
-        return Response(NegocioResponseSerializer(negocio).data, status=201)
+        return Response(NegocioCreateResponseSerializer(negocio).data, status=201)
 
 
 class NegocioDetailView(APIView):
+    permission_classes = [IsAdminUser]
     def _get_negocio(self, pk):
         try:
             return Negocio.objects.get(pk=pk)

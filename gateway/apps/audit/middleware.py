@@ -1,4 +1,7 @@
+import logging
 from .models import AuditLog
+
+logger = logging.getLogger(__name__)
 
 
 class AuditLogMiddleware:
@@ -23,7 +26,7 @@ class AuditLogMiddleware:
                     method=request.method,
                     status_code=response.status_code,
                 )
-            except Exception:
-                pass  # El log no debe interrumpir la respuesta
+            except Exception as e:
+                logger.exception("Error al registrar auditoría para negocio %s: %s", negocio.id, e)
 
         return response

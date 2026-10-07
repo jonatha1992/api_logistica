@@ -34,7 +34,7 @@ class NegocioResponseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Negocio
         fields = [
-            'id', 'api_key', 'activo', 'created_at',
+            'id', 'activo', 'created_at',
             # Datos del negocio
             'nombre', 'razon_social', 'cuit', 'telefono', 'direccion', 'sitio_web',
             # Identidad de marca
@@ -48,6 +48,12 @@ class NegocioResponseSerializer(serializers.ModelSerializer):
             # Estado de servicios (calculados)
             'resend_configurado', 'smtp_configurado', 'mp_configurado',
         ]
+        read_only_fields = fields
+
+
+class NegocioCreateResponseSerializer(NegocioResponseSerializer):
+    class Meta(NegocioResponseSerializer.Meta):
+        fields = ['api_key'] + NegocioResponseSerializer.Meta.fields
         read_only_fields = fields
 
     def get_resend_configurado(self, obj):
