@@ -37,3 +37,8 @@ Thumbs.db
 .claude/settings.local.json
 # MCP local config (contains DB credentials - never commit)
 .mcp.json
+
+# Keep VS Code run/debug configurations tracked
+!.vscode/
+!.vscode/launch.json
+!.vscode/tasks.json

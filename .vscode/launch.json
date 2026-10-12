@@ -1,0 +1,1 @@
+{"version":"0.2.0","configurations":[{"name":"API Logística: Django (F5)","type":"debugpy","request":"launch","program":"${workspaceFolder}/gateway/manage.py","args":["runserver","127.0.0.1:8060"],"django":true,"justMyCode":true,"cwd":"${workspaceFolder}/gateway","envFile":"${workspaceFolder}/gateway/.env","python":"${workspaceFolder}/.venv/Scripts/python.exe"}]}
