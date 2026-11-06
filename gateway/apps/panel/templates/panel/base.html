@@ -15,6 +15,13 @@
     .navbar-user { font-size: 13px; color: #94a3b8; display: flex; align-items: center; gap: 16px; }
     .navbar-user a { color: #94a3b8; text-decoration: none; }
     .navbar-user a:hover { color: #fff; }
+    .password-wrap { position: relative; }
+    .password-wrap input { padding-right: 48px; }
+    .show-password { position: absolute; top: 50%; right: 5px; transform: translateY(-50%); width: 38px; height: 38px; display: grid; place-items: center; padding: 0; border: 0; border-radius: 6px; background: transparent; color: #374151; cursor: pointer; }
+    .show-password:hover { background: #f3f4f6; color: #1a1a2e; }
+    .show-password:focus-visible { outline: 2px solid #6366f1; }
+    .show-password svg { width: 20px; height: 20px; }
+    .show-password .eye-slash[hidden] { display: none; }
 
     /* Layout */
     .container { max-width: 1200px; margin: 0 auto; padding: 32px 24px; }
@@ -56,6 +63,12 @@
     .form-hint  { font-size: 11px; color: #9ca3af; margin-top: 4px; }
     .form-input { width: 100%; padding: 9px 12px; border: 1.5px solid #d1d5db; border-radius: 8px; font-size: 14px; color: #1a1a2e; transition: border-color .15s; }
     .form-input:focus { outline: none; border-color: #6366f1; }
+    .password-wrap { position: relative; }
+    .password-wrap .form-input { padding-right: 48px; }
+    .show-password { position: absolute; top: 50%; right: 5px; transform: translateY(-50%); width: 38px; height: 38px; display: grid; place-items: center; padding: 0; border: 0; border-radius: 6px; background: transparent; color: #374151; cursor: pointer; }
+    .show-password:hover { background: #f3f4f6; color: #1a1a2e; }
+    .show-password:focus-visible { outline: 2px solid #6366f1; }
+    .show-password svg { width: 20px; height: 20px; }
     .form-row { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
     .form-section { margin-bottom: 32px; }
     .form-section-title { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: #6b7280; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid #e5e7eb; }
@@ -94,6 +107,20 @@
   {% endfor %}
   {% block content %}{% endblock %}
 </div>
+
+<script>
+document.addEventListener('click', (event) => {
+  const button = event.target.closest('.show-password');
+  if (!button) return;
+  const input = button.parentElement.querySelector('input');
+  if (!input) return;
+  const showing = input.type === 'password';
+  input.type = showing ? 'text' : 'password';
+  button.setAttribute('aria-pressed', String(showing));
+  button.setAttribute('aria-label', `${showing ? 'Ocultar' : 'Mostrar'} contraseña`);
+  button.querySelector('.eye-slash')?.toggleAttribute('hidden', !showing);
+});
+</script>
 
 </body>
 </html>

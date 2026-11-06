@@ -135,7 +135,7 @@
         <div class="form-row">
           <div class="form-group">
             <label class="form-label">API Key de Resend</label>
-            <input class="form-input" type="password" name="resend_api_key" placeholder="{% if negocio.resend_api_key %}••••••••• (guardada){% else %}re_xxxxxxxxxxxx{% endif %}">
+            <div class="password-wrap"><input class="form-input" type="password" name="resend_api_key" placeholder="{% if negocio.resend_api_key %}••••••••• (guardada){% else %}re_xxxxxxxxxxxx{% endif %}"><button class="show-password" type="button" aria-label="Mostrar contraseña" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/><path class="eye-slash" d="m4 4 16 16" hidden/></svg></button></div>
             <p class="form-hint">Dejá vacío para conservar la clave guardada.</p>
           </div>
           <div class="form-group">
@@ -164,7 +164,7 @@
           </div>
           <div class="form-group">
             <label class="form-label">Contraseña SMTP</label>
-            <input class="form-input" type="password" name="smtp_pass" placeholder="{% if negocio.smtp_pass %}••••••••• (guardada){% else %}Contraseña{% endif %}">
+            <div class="password-wrap"><input class="form-input" type="password" name="smtp_pass" placeholder="{% if negocio.smtp_pass %}••••••••• (guardada){% else %}Contraseña{% endif %}"><button class="show-password" type="button" aria-label="Mostrar contraseña" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/><path class="eye-slash" d="m4 4 16 16" hidden/></svg></button></div>
             <p class="form-hint">Dejá vacío para conservar la guardada.</p>
           </div>
         </div>
@@ -177,7 +177,7 @@
         <div class="form-section-title">MercadoPago</div>
         <div class="form-group">
           <label class="form-label">Access Token</label>
-          <input class="form-input" type="password" name="mp_access_token" placeholder="{% if negocio.mp_access_token %}••••••••• (guardado){% else %}APP_USR-xxxxx{% endif %}">
+          <div class="password-wrap"><input class="form-input" type="password" name="mp_access_token" placeholder="{% if negocio.mp_access_token %}••••••••• (guardado){% else %}APP_USR-xxxxx{% endif %}"><button class="show-password" type="button" aria-label="Mostrar contraseña" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/><path class="eye-slash" d="m4 4 16 16" hidden/></svg></button></div>
           <p class="form-hint">Token de producción de MercadoPago. Dejá vacío para conservar el guardado.</p>
         </div>
         <div class="form-group">
@@ -195,7 +195,7 @@
         <div class="form-row">
           <div class="form-group">
             <label class="form-label">Token de API</label>
-            <input class="form-input" type="password" name="envia_token" placeholder="{% if negocio.envia_token %}••••••••• (guardado){% else %}Token de Envia.com{% endif %}">
+            <div class="password-wrap"><input class="form-input" type="password" name="envia_token" placeholder="{% if negocio.envia_token %}••••••••• (guardado){% else %}Token de Envia.com{% endif %}"><button class="show-password" type="button" aria-label="Mostrar contraseña" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/><path class="eye-slash" d="m4 4 16 16" hidden/></svg></button></div>
             <p class="form-hint">Dejá vacío para conservar el guardado.</p>
           </div>
           <div class="form-group">
@@ -235,7 +235,7 @@
         </div>
         <div class="form-group">
           <label class="form-label">API Key / Token del proveedor</label>
-          <input class="form-input" type="password" name="whatsapp_api_key" placeholder="{% if negocio.whatsapp_api_key %}••••••••• (guardada){% else %}Token del proveedor{% endif %}">
+          <div class="password-wrap"><input class="form-input" type="password" name="whatsapp_api_key" placeholder="{% if negocio.whatsapp_api_key %}••••••••• (guardada){% else %}Token del proveedor{% endif %}"><button class="show-password" type="button" aria-label="Mostrar contraseña" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/><path class="eye-slash" d="m4 4 16 16" hidden/></svg></button></div>
           <p class="form-hint">Dejá vacío para conservar la guardada.</p>
         </div>
       </div>
