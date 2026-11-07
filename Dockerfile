@@ -12,6 +12,8 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+ARG GIT_SHA=unknown
+ENV GIT_SHA=${GIT_SHA}
 COPY gateway/requirements.txt .
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt

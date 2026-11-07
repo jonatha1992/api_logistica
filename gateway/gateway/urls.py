@@ -2,12 +2,14 @@ from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import RedirectView
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
+from apps.tenants.version import version_json
 
 admin.site.site_header = 'Gateway Maestro de Servicios'
 admin.site.site_title = 'Gateway Admin'
 admin.site.index_title = 'Panel de Administración Multi-Tenant'
 
 urlpatterns = [
+    path('version.json', version_json, name='version-json'),
     path('', RedirectView.as_view(url='/panel/login/', permanent=False)),
     path('admin/', admin.site.urls),
 

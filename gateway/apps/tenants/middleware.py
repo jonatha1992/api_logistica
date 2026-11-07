@@ -63,6 +63,8 @@ class TenantMiddleware:
         return self.get_response(request)
 
     def _es_publica(self, path: str) -> bool:
+        if path == '/version.json':
+            return True
         if path in self.RUTAS_PUBLICAS:
             return True
         return any(path.startswith(p) for p in self.PREFIJOS_PUBLICOS)
